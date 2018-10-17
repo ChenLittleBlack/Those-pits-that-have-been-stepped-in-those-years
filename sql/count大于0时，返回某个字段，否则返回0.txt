@@ -1,0 +1,21 @@
+--count大于0时，返回某个字段，否则返回0
+SELECT
+	ISNULL(
+		(
+			SELECT
+				CASE
+					WHEN COUNT (1) > 0 THEN
+						sapp.arrPlProNo
+					ELSE 0
+				END
+			FROM
+				pupurchase pp
+			LEFT JOIN pupurchases pps ON pp.purchaseID = pps.purID
+			LEFT JOIN StArrivalPlanProducts AS sapps ON pps.pursID = sapps.sourceRowID
+			LEFT JOIN StArrivalPlanProduct AS sapp ON sapp.arrPlProID = sapps.arrPlProID
+			WHERE
+				pp.purchaseID = 219813
+			AND sapp.arrPlProState != 3
+			GROUP BY
+				sapp.arrPlProNo
+		), 0) hasArrival
